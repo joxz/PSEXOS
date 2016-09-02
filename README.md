@@ -69,4 +69,8 @@ Get-Command -Module PSEXOS
 
 ````Powershell
   C:\PS> $res = Invoke-EXOScommand -ip "10.1.1.1" -cred (Get-Credential) -cmd "show vlan"
-  
+````
+
+## TODOs
+
+* Add SSL support
