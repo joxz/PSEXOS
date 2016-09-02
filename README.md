@@ -5,6 +5,8 @@
 This is a rudimentary Powershell module for working with the ExtremeXOS 'Machine to Machine Interface' (MMI) provided by Extreme Networks in EXOS version 21.1.4.
 The script uses `Invoke-Webrequest` to send JSONRPC over HTTP to a remote EXOS switch. The returned JSON is parsed to PowerShell objects for further processing.
 
+**Issues / Pull Requests welcome!**
+
 ## Instructions
 
 ````PowerShell
@@ -26,7 +28,7 @@ Get-Command -Module PSXOS
 
 ````PowerShell
   C:\PS> $res = Get-vlanportinfo -ip "10.1.0.1" -cred (Get-Credential) -ports "1-2"
-    C:\PS> $res | Format-Table
+  C:\PS> $res | Format-Table
         Port VLAN_ID Name    Tag    VR
         ---- ------- ----    ---    --
         1    1234    Ctrl    Tagged VR-Default
