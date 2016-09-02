@@ -11,11 +11,27 @@ function Invoke-EXOScommand {
 
         [Parameter(mandatory=$true)]
         [alias("cmd")]
-        [string]$command  
+        [string]$command,
+        
+        [Parameter(mandatory=$false)]
+        [alias("json")]
+        [switch]$showjson
     )
 
-begin {
-    $response,$session = Send-EXOSrpc -ip $ipaddress -cred $credential -cmd $command
-}
+process {
+        $response,$session = Send-EXOSrpc -ip $ipaddress -cred $credential -cmd $command
+
+        $clioutput = ($response.content |ConvertFrom-Json).result.clioutput
+        $json = $response.content
+} #end process
+
+end {   
+    if ($showjson) {
+        return $clioutput, $json
+    }
+    elseif (-not $showjson) {
+        return $clioutput
+    }
+} #end end
 
 } #end function
