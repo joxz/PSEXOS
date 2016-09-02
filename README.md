@@ -12,14 +12,14 @@ The script uses `Invoke-Webrequest` to send JSONRPC over HTTP to a remote EXOS s
 ````PowerShell
 # manual setup
  # download the repository
- # copy the 'PSXOS' folder to a module path ($env:USERPROFILE\Documents\WindowsPowerShell\Modules\)
- Import-Module PSXOS (Import-Module \\Path\PSXOS)
+ # copy the 'PSEXOS' folder to a module path ($env:USERPROFILE\Documents\WindowsPowerShell\Modules\)
+ Import-Module PSEXOS (Import-Module \\Path\PSEXOS)
 
 # TODO: with PowerShell 5 and PowerShellGet
-Install-Module PSXOS
+Install-Module PSEXOS
 
 # Get commands for the module
-Get-Command -Module PSXOS
+Get-Command -Module PSEXOS
 ````
 
 ## Examples
@@ -42,7 +42,7 @@ Get-Command -Module PSXOS
         2    5       voice   Tagged VR-Default
 
 
-    C:\PS> $res | Sort-Object Port, Tag, VLAN_ID | Format-Table -GroupBy Port -auto
+  C:\PS> $res | Sort-Object Port, Tag, VLAN_ID | Format-Table -GroupBy Port -auto
 
            Port: 1
        
@@ -64,3 +64,9 @@ Get-Command -Module PSXOS
         2    254     v254    Tagged VR-Default
         2    5       voice   Tagged VR-Default
 ````
+
+### Invoke command on EXOS switch
+
+````Powershell
+  C:\PS> $res = Invoke-EXOScommand -ip "10.1.1.1" -cred (Get-Credential) -cmd "show vlan"
+  
