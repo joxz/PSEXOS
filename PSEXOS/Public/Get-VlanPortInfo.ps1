@@ -11,7 +11,7 @@ function Get-VlanPortInfo {
     .PARAMETER credential
     Specifies the credentials to be used for the request as System.Management.Automation.PSCredential.
     .PARAMETER portlist
-    Specifies the ports to display.
+    Specifies the ports to display (format e.g.: "1-2" or "1:1-15").
     .INPUTS
     None. You cannot pipe objects to Get-VlanPortInfo.
     .OUTPUTS
@@ -73,11 +73,11 @@ function Get-VlanPortInfo {
         [alias("ip")]
         [string]$ipaddress,
 
-        [Parameter(mandatory=$false)]
+        [Parameter(mandatory=$true)]
         [alias("cred")]
         [System.Management.Automation.PSCredential]$credential,
 
-        [Parameter(mandatory=$false)]
+        [Parameter(mandatory=$true)]
         [alias("ports")]
         [string]$portlist  
     )
@@ -87,7 +87,7 @@ begin {
 
     # get ports in portlist
     $command = "debug cfgmgr show next vlan.show_ports_info port=None portList=$portlist"
-    $response,$session = Send-XOSrpc -ip $ipaddress -cred $credential -cmd $command
+    $response,$session = Send-EXOSrpc -ip $ipaddress -cred $credential -cmd $command
 
     # convert response to object
     $responseobj = $response.content | ConvertFrom-Json
@@ -100,7 +100,7 @@ process {
     foreach ($item in $responseobj.result.data.port) {
         write-verbose -message "Port: $item"
         $commandvlan = "debug cfgmgr show next vlan.show_ports_info_detail_vlans port=$item vlanIfInstance=None"
-        $portresponse = Send-XOSrpc -ip $ipaddress -cmd $commandvlan -session $session
+        $portresponse = Send-EXOSrpc -ip $ipaddress -cmd $commandvlan -session $session
 
         Write-Verbose -Message "Parameters for request: $ipaddress`n $commandvlan`n $session`n"
 
