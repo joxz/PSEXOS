@@ -96,7 +96,7 @@ begin {
 } #end begin
 
 process {
-    # loop portlist send webrequests for VLANs assigned to the port
+    # loop portlist send webrequests for VLANs assigned to each port
     foreach ($item in $responseobj.result.data.port) {
         write-verbose -message "Port: $item"
         $commandvlan = "debug cfgmgr show next vlan.show_ports_info_detail_vlans port=$item vlanIfInstance=None"
