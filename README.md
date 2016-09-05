@@ -16,7 +16,7 @@ The script uses `Invoke-Webrequest` to send JSONRPC over HTTP to a remote EXOS s
  Import-Module PSEXOS (Import-Module \\Path\PSEXOS)
 
 # TODO: with PowerShell 5 and PowerShellGet
-Install-Module PSEXOS
+#Install-Module PSEXOS
 
 # Get commands for the module
 Get-Command -Module PSEXOS
@@ -24,7 +24,9 @@ Get-Command -Module PSEXOS
 
 ## Examples
 
-### Display VLANs for selected ports
+### Get-VlanPortInfo
+
+Displays VLANs for selected ports tagged/untagged. Data is returned as a PSCustomObject.
 
 ````PowerShell
   C:\PS> $res = Get-vlanportinfo -ip "10.1.0.1" -cred (Get-Credential) -ports "1-2"
@@ -65,12 +67,56 @@ Get-Command -Module PSEXOS
         2    5       voice   Tagged VR-Default
 ````
 
-### Invoke command on EXOS switch
+### Invoke-EXOScommand
+
+Invokes a command on an EXOS switch. CLIoutput is returned, the JSON aswell if parameter provided. The JSON response can then be parsed to PowerShell objects.
 
 ````Powershell
   C:\PS> $res = Invoke-EXOScommand -ip "10.1.1.1" -cred (Get-Credential) -cmd "show vlan"
+  C:\PS> $res
+
+      -----------------------------------------------------------------------------------------------
+      Name            VID  Protocol Addr       Flags                         Proto  Ports  Virtual
+                                                                                    Active router
+                                                                                    /Total
+      -----------------------------------------------------------------------------------------------
+      Ctrl            1234 --------------------------------------C---------  ANY    0 /2   VR-Default
+      Default         1    --------------------------------T---------------  ANY    0 /1   VR-Default
+      fdfdfd          4088 ------------------------------------------------  ANY    0 /0   VR-Default
+      lala            123  ------------------------------------------------  ANY    0 /2   VR-Default
+      Mgmt            4095 10.139.12.35   /24  ----------------------------  ANY    1 /1   VR-Mgmt
+      v254            254  192.168.254.51 /24  ------------------P---------  ANY    0 /2   VR-Default
+      voice           5    ------------------------------------------------  ANY    0 /1   VR-Default
+      wlan            110  ------------------------------------------------  ANY    0 /1   VR-Default
+      -----------------------------------------------------------------------------------------------
+      Flags : (B) BFD Enabled, (c) 802.1ad customer VLAN, (C) EAPS Control VLAN,
+              (d) Dynamically created VLAN, (D) VLAN Admin Disabled,
+              (e) CES Configured, (E) ESRP Enabled, (f) IP Forwarding Enabled,
+              (F) Learning Disabled, (i) ISIS Enabled,
+              (I) Inter-Switch Connection VLAN for MLAG, (k) PTP Configured,
+              (l) MPLS Enabled, (L) Loopback Enabled, (m) IPmc Forwarding Enabled,
+              (M) Translation Member VLAN or Subscriber VLAN, (n) IP Multinetting Enabled,
+              (N) Network Login VLAN, (o) OSPF Enabled, (O) Virtual Network Overlay,
+              (p) PIM Enabled, (P) EAPS protected VLAN, (r) RIP Enabled,
+              (R) Sub-VLAN IP Range Configured, (s) Sub-VLAN, (S) Super-VLAN,
+              (t) Translation VLAN or Network VLAN, (T) Member of STP Domain,
+              (v) VRRP Enabled, (V) VPLS Enabled, (W) VPWS Enabled, (Z) OpenFlow Enabled
+
+      Total number of VLAN(s) : 8
 ````
+
+## Notes
+
+* ExtremeXOS MMI is compatible with ExtremeXOS 21.1+.
+* Webserver needs to be enabled on the switch
+  * `enable web http`
+  * an **admin level user with password** has to be used
+* <http://documentation.extremenetworks.com/app_notes/MMI/121152_MMI_Application_Release_Notes.pdf>
 
 ## TODOs
 
 * Add SSL support
+* Add Proxy support
+* Store cookie for repeated use of Invoke-EXOScommand
+* Multiple inputs and pipeline support for Invoke-EXOScommand
+* Make PSEXOS compatible for PowerShell5 and PowerShellGet (upload to PSGallery)
