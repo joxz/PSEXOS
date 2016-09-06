@@ -7,7 +7,7 @@ function Get-VlanPortInfo {
     You can see VLAN IDs, VLAN Names, tagged or untagged and VR.
     Output is a PSCustomObject and may be formatted or processed like any other PowerShell object.
     .PARAMETER ipaddress
-    Specifies the IP Address of the switch with http enabled.
+    Specifies the IP address of the switch with http enabled.
     .PARAMETER credential
     Specifies the credentials to be used for the request as System.Management.Automation.PSCredential.
     .PARAMETER portlist
@@ -19,7 +19,7 @@ function Get-VlanPortInfo {
     .EXAMPLE
     Get-VlanPortInfo for ports 1-2 with additional processing for visibility
 
-    C:\PS> $res = Get-vlanportinfo -ip "10.1.0.1" -cred (Get-Credential) -ports "1-2"
+    C:\PS> $res = Get-VlanPortInfo -ip "10.1.0.1" -cred (Get-Credential) -ports "1-2"
     C:\PS> $res | Format-Table
         Port VLAN_ID Name    Tag    VR
         ---- ------- ----    ---    --
@@ -92,6 +92,7 @@ begin {
     # convert response to object
     $responseobj = $response.content | ConvertFrom-Json
 
+    # arraylist for output
     [System.Collections.ArrayList]$result = @()
 } #end begin
 
@@ -115,14 +116,13 @@ process {
             elseif ($portobj.tagStatus -like "0") {
                 $tag = "PVID"
             }
-            $vr = $portobj.vrName
 
             $obj=[pscustomobject] @{
                 'Port' = $item
                 'VLAN_ID' = $portobj.vlanId
                 'Name' = $portobj.vlanName
                 'Tag' = $tag
-                'VR' = $vr
+                'VR' = $portobj.vrName
             }
 
             # add object to ArrayList

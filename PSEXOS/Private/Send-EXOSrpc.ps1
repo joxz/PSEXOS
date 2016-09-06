@@ -7,7 +7,7 @@ function Send-EXOSrpc {
     When used with credentials this function returns 2 objects, WebResponseObject and Sessionvariable.
     The Sessionvariable can be used by following requests, no credentials necessary.
     .PARAMETER ipaddress
-    Specifies the IP Address of the switch with http enabled.
+    Specifies the IP address of the switch with http enabled.
     .PARAMETER command
     Specifies the command to be executed.
     .PARAMETER credential

@@ -6,7 +6,7 @@ function Invoke-EXOScommand {
     Invokes command on an EXOS switch. 
     When used this function returns the CLIoutput as formatted text and when used with '-json' the JSON response as PowerShell Object.
     .PARAMETER ipaddress
-    Specifies the IP Address of the switch with http enabled.
+    Specifies the IP address of the switch with http enabled.
     .PARAMETER command
     Specifies the command to be executed.
     .PARAMETER credential
@@ -14,11 +14,11 @@ function Invoke-EXOScommand {
     .PARAMETER json
     JSON output on (default: off). 
     .INPUTS
-    None. You cannot pipe objects to Invoke-EXOScommand
+    Pipeline input for IPAddresses accepted. See example below
     .OUTPUTS
     System.String - CLIouput as formatted text.
     System.String - JSON output
-    Successful commands without a CLI output display empty strings (e.g.)
+    Successful commands without a CLI output display empty strings (e.g. 'create vlan test')
     .EXAMPLE
     Command with only CLIouput
 
@@ -41,7 +41,7 @@ function Invoke-EXOScommand {
     .EXAMPLE
     Command with JSON output
 
-    C:\PS> $cmd,$json = Invoke-EXOScommand -ip "10.1.1.1" -cred (Get-Credential) -command "show port 1 statistics"
+    C:\PS> $cmd,$json = Invoke-EXOScommand -ip "10.1.1.1" -cred (Get-Credential) -command "show port 1 statistics" -json
     C:\PS> $json
         {
           "id": "297",
@@ -73,6 +73,11 @@ function Invoke-EXOScommand {
     Multiple commands are also supported
 
     C:\PS> Invoke-EXOScommand -ip "10.1.1.1" -cred (Get-Credential) -command "create vlan test tag 888; show vlan"
+    .EXAMPLE
+    Pipeline Input
+
+    C:\PS> $ip = "10.1.1.1","10.1.1.2"
+    C:\PS> $ip | % { Invoke-EXOScommand -ip $_ -cred (Get-Credential) -cmd "show vlan" }
     .NOTES
     Send-XOSjsonrpc relies on ExtremeXOS Machine to Machine Interface (MMI).
     ExtremeXOS MMI is compatible with ExtremeXOS 21.1+.
@@ -102,24 +107,22 @@ process {
     foreach ($ip in $ipaddress) {
         $response,$session = Send-EXOSrpc -ip $ip -cred $credential -cmd $command
 
-        $clioutput = ($response.content |ConvertFrom-Json).result.clioutput
+        $clioutput = ($response.content | ConvertFrom-Json).result.clioutput
         $json = $response.content
+        
+        # give some output for commands without clioutput (e.g. "create vlan XXX")
+        if ($clioutput.length -eq 0) {
+            Write-Output "Command successful, empty CLIoutput returned"
+        }
+        
+        # output json if parameter present
+        if ($showjson) {
+            return $clioutput, $json
+        }
+        else {
+            return $clioutput
+        }
     } #end foreach
 } #end process
-
-end {   
-    # give some output for commands without clioutput (e.g. "create vlan XXX")
-    if ($clioutput.length -eq 0) {
-        Write-Output "Command successful, empty json returned"
-    }
-
-    # output json if parameter present
-    if ($showjson) {
-        return $clioutput, $json
-    }
-    else {
-        return $clioutput
-    }
-} #end end
 
 } #end function
