@@ -141,5 +141,6 @@ Get VLAN properties as PowerShell objects
         Mgmt 4095 1                                     10.139.12.35              VR-Mgmt
 ```
 
+VLAN properties in Out-GridView
 ![Get-Vlan](/media/get-vlan_ogv.JPG)
 
