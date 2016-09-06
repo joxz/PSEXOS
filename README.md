@@ -4,23 +4,35 @@
 
 This is a rudimentary Powershell module for working with the ExtremeXOS 'Machine to Machine Interface' (MMI) provided by Extreme Networks in EXOS version 21.1.4.
 The script uses `Invoke-Webrequest` to send JSONRPC over HTTP to a remote EXOS switch. The returned JSON is parsed to PowerShell objects for further processing.
-
-**Issues / Pull Requests welcome!**
+__Issues / Pull Requests welcome!__
 
 ## Instructions
 
-````PowerShell
+```PowerShell
 # manual setup
  # download the repository
  # copy the 'PSEXOS' folder to a module path ($env:USERPROFILE\Documents\WindowsPowerShell\Modules\)
  Import-Module PSEXOS (Import-Module \\Path\PSEXOS)
 
-# TODO: with PowerShell 5 and PowerShellGet
-#Install-Module PSEXOS
-
 # Get commands for the module
 Get-Command -Module PSEXOS
-````
+```
+
+## TODOs
+
+* Add SSL support
+* Add Proxy support
+* Store cookie for repeated use of Invoke-EXOScommand
+* Multiple inputs and pipeline support for Invoke-EXOScommand
+* Make PSEXOS compatible for PowerShell5 and PowerShellGet (upload to PSGallery)
+
+## Notes
+
+* ExtremeXOS MMI is compatible with ExtremeXOS 21.1+.
+* Webserver needs to be enabled on the switch
+  * `enable web http`
+  * an __admin level user with password__ has to be used
+* <http://documentation.extremenetworks.com/app_notes/MMI/121152_MMI_Application_Release_Notes.pdf>
 
 ## Examples
 
@@ -47,7 +59,7 @@ Displays VLANs for selected ports tagged/untagged. Data is returned as a PSCusto
   C:\PS> $res | Sort-Object Port, Tag, VLAN_ID | Format-Table -GroupBy Port -auto
 
            Port: 1
-       
+
         Port VLAN_ID Name Tag    VR
         ---- ------- ---- ---    --
         1    110     wlan PVID   VR-Default
@@ -57,7 +69,7 @@ Displays VLANs for selected ports tagged/untagged. Data is returned as a PSCusto
 
 
            Port: 2
-       
+
         Port VLAN_ID Name    Tag    VR
         ---- ------- ----    ---    --
         2    1       Default PVID   VR-Default
@@ -104,19 +116,3 @@ Invokes a command on an EXOS switch. CLIoutput is returned, the JSON aswell if p
 
       Total number of VLAN(s) : 8
 ```
-
-## Notes
-
-* ExtremeXOS MMI is compatible with ExtremeXOS 21.1+.
-* Webserver needs to be enabled on the switch
-  * `enable web http`
-  * an **admin level user with password** has to be used
-* <http://documentation.extremenetworks.com/app_notes/MMI/121152_MMI_Application_Release_Notes.pdf>
-
-## TODOs
-
-* Add SSL support
-* Add Proxy support
-* Store cookie for repeated use of Invoke-EXOScommand
-* Multiple inputs and pipeline support for Invoke-EXOScommand
-* Make PSEXOS compatible for PowerShell5 and PowerShellGet (upload to PSGallery)
