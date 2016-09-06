@@ -28,7 +28,7 @@ Get-Command -Module PSEXOS
 
 Displays VLANs for selected ports tagged/untagged. Data is returned as a PSCustomObject.
 
-````PowerShell
+```PowerShell
   C:\PS> $res = Get-vlanportinfo -ip "10.1.0.1" -cred (Get-Credential) -ports "1-2"
   C:\PS> $res | Format-Table
         Port VLAN_ID Name    Tag    VR
@@ -65,13 +65,13 @@ Displays VLANs for selected ports tagged/untagged. Data is returned as a PSCusto
         2    1234    Ctrl    Tagged VR-Default
         2    254     v254    Tagged VR-Default
         2    5       voice   Tagged VR-Default
-````
+```
 
 ### Invoke-EXOScommand
 
 Invokes a command on an EXOS switch. CLIoutput is returned, the JSON aswell if parameter provided. The JSON response can then be parsed to PowerShell objects.
 
-````Powershell
+```Powershell
   C:\PS> $res = Invoke-EXOScommand -ip "10.1.1.1" -cred (Get-Credential) -cmd "show vlan"
   C:\PS> $res
 
@@ -103,7 +103,7 @@ Invokes a command on an EXOS switch. CLIoutput is returned, the JSON aswell if p
               (v) VRRP Enabled, (V) VPLS Enabled, (W) VPWS Enabled, (Z) OpenFlow Enabled
 
       Total number of VLAN(s) : 8
-````
+```
 
 ## Notes
 
