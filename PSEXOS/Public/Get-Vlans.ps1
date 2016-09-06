@@ -11,7 +11,7 @@ function Get-Vlans {
     .PARAMETER credential
     Specifies the credentials to be used for the request as System.Management.Automation.PSCredential.
     .INPUTS
-    None. You cannot pipe objects to Get-VlanPortInfo.
+    None. You cannot pipe objects to Get-Vlans.
     .OUTPUTS
     System.Management.Automation.PSCustomObject
     .EXAMPLE
