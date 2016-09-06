@@ -123,7 +123,7 @@ Get VLAN properties as PowerShell objects
 
 ```Powershell
   C:\PS> $res = Get-vlans -ip "10.139.12.35" -cred (Get-Credential)
-    C:\PS> $res | Format-Table
+  C:\PS> $res | Format-Table
         name    tag  activePorts taggedPorts untaggedPorts ipAddress      ipForwarding VR
         ----    ---  ----------- ----------- ------------- ---------      ------------ --
         Default 1    0                       2                                         VR-Default
@@ -135,12 +135,13 @@ Get VLAN properties as PowerShell objects
         fdfdfd  4088 0                                                                 VR-Default
         Mgmt    4095 1                                     10.139.12.35                VR-Mgmt
 
-    C:\PS> $res | ? ipAddress -like "10.*" | ft
+  C:\PS> $res | ? ipAddress -like "10.*" | ft
         name tag  activePorts taggedPorts untaggedPorts ipAddress    ipForwarding VR
         ---- ---  ----------- ----------- ------------- ---------    ------------ --
         Mgmt 4095 1                                     10.139.12.35              VR-Mgmt
 ```
 
 VLAN properties in Out-GridView
+
 ![Get-Vlan](/media/get-vlan_ogv.JPG)
 
