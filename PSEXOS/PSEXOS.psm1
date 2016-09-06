@@ -1,19 +1,19 @@
-#Get public and private function definition files
-    $Public  = Get-ChildItem $PSScriptRoot\*.ps1 -ErrorAction SilentlyContinue 
-    $Private = Get-ChildItem $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue 
+Set-StrictMode -Version Latest
+$here = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-#Dotsource the files
-    Foreach($import in @($Public + $Private))
-    {
-        Try
-        {
-            . $import.fullname
-        }
-        Catch
-        {
-            Write-Error "Failed to import function $($import.fullname)"
-        }
-    } #end foreach
+$ps1s = Get-ChildItem -Path ("$here\Functions\") -Filter *.ps1
 
-#Export public functions
-Export-ModuleMember -Function $Public.Basename
+ForEach ($ps1 in $ps1s)
+{
+    Write-Verbose "Loading $($ps1.FullName)"
+    . $ps1.FullName
+}
+
+$functionstoexport = @(
+    'Invoke-EXOScommand'
+    'Get-Vlans'
+    'Get-VlanPortInfo'
+)
+
+#Export functions
+Export-ModuleMember -Function $functionsToExport
