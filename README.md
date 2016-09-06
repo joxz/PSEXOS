@@ -4,6 +4,7 @@
 
 This is a rudimentary Powershell module for working with the ExtremeXOS 'Machine to Machine Interface' (MMI) provided by Extreme Networks in EXOS version 21.1.4.
 The script uses `Invoke-Webrequest` to send JSONRPC over HTTP to a remote EXOS switch. The returned JSON is parsed to PowerShell objects for further processing.
+
 __Issues / Pull Requests welcome!__
 
 ## Instructions
@@ -23,7 +24,6 @@ Get-Command -Module PSEXOS
 * Add SSL support
 * Add Proxy support
 * Store cookie for repeated use of Invoke-EXOScommand
-* Multiple inputs and pipeline support for Invoke-EXOScommand
 * Make PSEXOS compatible for PowerShell5 and PowerShellGet (upload to PSGallery)
 
 ## Notes
@@ -38,11 +38,11 @@ Get-Command -Module PSEXOS
 
 ### Get-VlanPortInfo
 
-Displays VLANs for selected ports tagged/untagged. Data is returned as a PSCustomObject.
+Displays VLANs assigned to selected ports. Data is returned as a PSCustomObject.
 
 ```PowerShell
-  C:\PS> $res = Get-vlanportinfo -ip "10.1.0.1" -cred (Get-Credential) -ports "1-2"
-  C:\PS> $res | Format-Table
+  C:\PS> $result = Get-VlanPortInfo -ip "10.1.0.1" -cred (Get-Credential) -ports "1-2"
+  C:\PS> $result | Format-Table
         Port VLAN_ID Name    Tag    VR
         ---- ------- ----    ---    --
         1    1234    Ctrl    Tagged VR-Default
@@ -56,7 +56,7 @@ Displays VLANs for selected ports tagged/untagged. Data is returned as a PSCusto
         2    5       voice   Tagged VR-Default
 
 
-  C:\PS> $res | Sort-Object Port, Tag, VLAN_ID | Format-Table -GroupBy Port -auto
+  C:\PS> $result | Sort-Object Port, Tag, VLAN_ID | Format-Table -GroupBy Port -auto
 
            Port: 1
 
@@ -81,11 +81,11 @@ Displays VLANs for selected ports tagged/untagged. Data is returned as a PSCusto
 
 ### Invoke-EXOScommand
 
-Invokes a command on an EXOS switch. CLIoutput is returned, the JSON aswell if parameter provided. The JSON response can then be parsed to PowerShell objects.
+Invokes a command on an EXOS switch. CLIoutput is returned, the JSON aswell if parameter provided. The JSON response can then be parsed to PowerShell objects with `ConvertFrom-Json`.
 
 ```Powershell
-  C:\PS> $res = Invoke-EXOScommand -ip "10.1.1.1" -cred (Get-Credential) -cmd "show vlan"
-  C:\PS> $res
+  C:\PS> $result = Invoke-EXOScommand -ip "10.1.1.1" -cred (Get-Credential) -cmd "show vlan"
+  C:\PS> $result
 
       -----------------------------------------------------------------------------------------------
       Name            VID  Protocol Addr       Flags                         Proto  Ports  Virtual
@@ -116,3 +116,30 @@ Invokes a command on an EXOS switch. CLIoutput is returned, the JSON aswell if p
 
       Total number of VLAN(s) : 8
 ```
+
+### Get-Vlans
+
+Get VLAN properties as PowerShell objects
+
+```Powershell
+  C:\PS> $res = Get-vlans -ip "10.139.12.35" -cred (Get-Credential)
+    C:\PS> $res | Format-Table
+        name    tag  activePorts taggedPorts untaggedPorts ipAddress      ipForwarding VR
+        ----    ---  ----------- ----------- ------------- ---------      ------------ --
+        Default 1    0                       2                                         VR-Default
+        voice   5    0           2                                                     VR-Default
+        wlan    110  0                       1                                         VR-Default
+        lala    123  0           1-2                                                   VR-Default
+        v254    254  0           1-2                       192.168.254.51              VR-Default
+        Ctrl    1234 0           1-2                                                   VR-Default
+        fdfdfd  4088 0                                                                 VR-Default
+        Mgmt    4095 1                                     10.139.12.35                VR-Mgmt
+
+    C:\PS> $res | ? ipAddress -like "10.*" | ft
+        name tag  activePorts taggedPorts untaggedPorts ipAddress    ipForwarding VR
+        ---- ---  ----------- ----------- ------------- ---------    ------------ --
+        Mgmt 4095 1                                     10.139.12.35              VR-Mgmt
+```
+
+![Get-Vlan](/media/get-vlan_ogv.JPG)
+
