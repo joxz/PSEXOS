@@ -79,6 +79,10 @@ Displays VLANs assigned to selected ports. Data is returned as a PSCustomObject.
         2    5       voice   Tagged VR-Default
 ```
 
+Display VLANs for selected ports in Out-GridView
+
+![Get-VlanPortInfo](/media/get-vlanportinfo_ogv.JPG)
+
 ### Invoke-EXOScommand
 
 Invokes a command on an EXOS switch. CLIoutput is returned, the JSON aswell if parameter provided. The JSON response can then be parsed to PowerShell objects with `ConvertFrom-Json`.
