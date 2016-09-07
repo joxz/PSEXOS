@@ -13,7 +13,7 @@ __Issues / Pull Requests welcome!__
 # manual setup
  # download the repository
  # copy the 'PSEXOS' folder to a module path ($env:USERPROFILE\Documents\WindowsPowerShell\Modules\)
- Import-Module PSEXOS (Import-Module \\Path\PSEXOS)
+Import-Module PSEXOS (Import-Module \\Path\PSEXOS)
 
 # Get commands for the module
 Get-Command -Module PSEXOS
@@ -24,10 +24,11 @@ Get-Command -Module PSEXOS
 * Add SSL support
 * Add Proxy support
 * Store cookie for repeated use of Invoke-EXOScommand
-* Make PSEXOS compatible for PowerShell5 and PowerShellGet (upload to PSGallery)
+* Make PSEXOS available for PowerShell 5 and PowerShellGet
 
 ## Notes
 
+* Requires PowerShell version 3.0 (find out which version you are using: `$PSVersionTable.PSVersion`)
 * ExtremeXOS MMI is compatible with ExtremeXOS 21.1+.
 * Webserver needs to be enabled on the switch
   * `enable web http`

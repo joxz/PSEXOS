@@ -60,7 +60,7 @@ function Send-EXOSrpc {
     Webserver needs to be enabled on the switch - 'enable web http'.
     http://documentation.extremenetworks.com/app_notes/MMI/121152_MMI_Application_Release_Notes.pdf
 #>
-
+    #Requires -Version 3.0
     [CmdletBinding()]
     Param(
         [Parameter(mandatory=$true)]
