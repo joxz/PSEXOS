@@ -17,6 +17,12 @@ Import-Module PSEXOS (Import-Module \\Path\PSEXOS)
 
 # Get commands for the module
 Get-Command -Module PSEXOS
+
+CommandType     Name                                               Version    Source
+-----------     ----                                               -------    ------
+Function        Get-VlanPortInfo                                   1.0        PSEXOS
+Function        Get-Vlans                                          1.0        PSEXOS
+Function        Invoke-EXOScommand                                 1.0        PSEXOS
 ```
 
 ## TODOs
