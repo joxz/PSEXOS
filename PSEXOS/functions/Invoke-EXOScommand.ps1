@@ -108,7 +108,10 @@ process {
     foreach ($ip in $ipaddress) {
         $response,$session = Send-EXOSrpc -ip $ip -cred $credential -cmd $command
 
-        $clioutput = ($response.content | ConvertFrom-Json).result.clioutput
+        $responseobj = ($response.content | ConvertFrom-Json)
+        Write-Verbose -Message $($responseobj | get-member | out-string)
+        Write-Verbose -Message $($responseobj.result | get-member | out-string)
+        $clioutput = $responseobj.result.CLIoutput
         $json = $response.content
         
         # give some output for commands without clioutput (e.g. "create vlan XXX")
