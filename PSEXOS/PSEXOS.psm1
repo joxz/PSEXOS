@@ -13,7 +13,6 @@ $functionstoexport = @(
     'Invoke-EXOScommand'
     'Get-Vlans'
     'Get-VlanPortInfo'
-    'Send-EXOSrpc'
 )
 
 #Export functions
