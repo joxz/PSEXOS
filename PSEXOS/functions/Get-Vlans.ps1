@@ -39,14 +39,12 @@ function Get-Vlans {
     Get-Vlans in Out-GridView
     
     C:\PS> Get-vlans -ip "10.139.12.35" -cred (Get-Credential) | ogv
-
     .NOTES
-    Get-VlanPortInfo relies on ExtremeXOS Machine to Machine Interface (MMI).
+    Get-Vlans relies on ExtremeXOS Machine to Machine Interface (MMI).
     ExtremeXOS MMI is compatible with ExtremeXOS 21.1+.
     Webserver needs to be enabled on the switch - 'enable web http'.
     http://documentation.extremenetworks.com/app_notes/MMI/121152_MMI_Application_Release_Notes.pdf
-#>
-    #Requires -Version 3.0 
+#> 
     [CmdletBinding()]
     Param(
         [Parameter(mandatory=$true)]

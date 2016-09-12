@@ -155,4 +155,3 @@ Get VLAN properties as PowerShell objects
 VLAN properties in Out-GridView
 
 ![Get-Vlan](/media/get-vlan_ogv.JPG)
-

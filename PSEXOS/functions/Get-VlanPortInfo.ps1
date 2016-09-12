@@ -60,14 +60,12 @@ function Get-VlanPortInfo {
     Get-VlanPortInfo for ports 1-2 piped to Out-GridView
 
     C:\PS> Get-vlanportinfo -ip "10.1.0.1" -cred (Get-Credential) -ports "1-2" | Sort-Object Port, Tag, VLAN_ID | Out-GridView
-
     .NOTES
     Get-VlanPortInfo relies on ExtremeXOS Machine to Machine Interface (MMI).
     ExtremeXOS MMI is compatible with ExtremeXOS 21.1+.
     Webserver needs to be enabled on the switch - 'enable web http'.
     http://documentation.extremenetworks.com/app_notes/MMI/121152_MMI_Application_Release_Notes.pdf
 #>  
-    #Requires -Version 3.0  
     [CmdletBinding()]
     Param(
         [Parameter(mandatory=$true)]
