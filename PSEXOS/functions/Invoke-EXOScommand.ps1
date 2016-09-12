@@ -20,7 +20,7 @@ function Invoke-EXOScommand {
     System.String - JSON output
     Successful commands without a CLI output display empty strings (e.g. 'create vlan test')
     .EXAMPLE
-    Command with only CLIouput
+    Command showing CLIouput
 
     C:\PS> $cmd = Invoke-EXOScommand -ip "10.1.1.1" -cred (Get-Credential) -command "show vlan"
     C:\PS> $cmd
@@ -39,7 +39,7 @@ function Invoke-EXOScommand {
 
         ...
     .EXAMPLE
-    Command with JSON output
+    Command showing JSON output
 
     C:\PS> $cmd,$json = Invoke-EXOScommand -ip "10.1.1.1" -cred (Get-Credential) -command "show port 1 statistics" -json
     C:\PS> $json
@@ -79,12 +79,11 @@ function Invoke-EXOScommand {
     C:\PS> $ip = "10.1.1.1","10.1.1.2"
     C:\PS> $ip | % { Invoke-EXOScommand -ip $_ -cred (Get-Credential) -cmd "show vlan" }
     .NOTES
-    Send-XOSjsonrpc relies on ExtremeXOS Machine to Machine Interface (MMI).
+    Invoke-EXOScommand relies on ExtremeXOS Machine to Machine Interface (MMI).
     ExtremeXOS MMI is compatible with ExtremeXOS 21.1+.
     Webserver needs to be enabled on the switch - 'enable web http'.
     http://documentation.extremenetworks.com/app_notes/MMI/121152_MMI_Application_Release_Notes.pdf
 #>
-    #Requires -Version 3.0
     [CmdletBinding()]
     Param(
         [Parameter(mandatory=$true, ValueFromPipeline=$true)]
@@ -100,8 +99,7 @@ function Invoke-EXOScommand {
         [string]$command,
         
         [Parameter(mandatory=$false)]
-        [alias("json")]
-        [switch]$showjson
+        [switch]$json
     )
 
 process {
@@ -111,8 +109,8 @@ process {
         $responseobj = ($response.content | ConvertFrom-Json)
         Write-Verbose -Message $($responseobj | get-member | out-string)
         Write-Verbose -Message $($responseobj.result | get-member | out-string)
-        $clioutput = $responseobj.result.CLIoutput
-        $json = $response.content
+        $clioutput = $responseobj.result[0].CLIoutput
+        $jsonoutput = $response.content
         
         # give some output for commands without clioutput (e.g. "create vlan XXX")
         if ($clioutput.length -eq 0) {
@@ -120,8 +118,8 @@ process {
         }
         
         # output json if parameter present
-        if ($showjson) {
-            return $clioutput, $json
+        if ($json) {
+            return $clioutput, $jsonoutput
         }
         else {
             return $clioutput
